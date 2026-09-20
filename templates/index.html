@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Social Media AI Generator</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        text-align: center;
+        background: #f4f7fb
+    }
+    h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #555;
+    font-size: 18px;
+}
+
+    textarea {
+        width: 90%;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    select {
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .result {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: left;
+        white-space: pre-wrap;
+    }
+</style>
+</head>
+
+<body>
+    <div class="container"></div>
+
+    <h1>🤖 Social Media AI Generator</h1>
+
+    <p>Generate social media content using AI</p>
+
+    <form method="POST">
+
+        <label>Enter your topic:</label>
+
+        <br><br>
+
+        <textarea
+            name="topic"
+            rows="5"
+            cols="50"
+            placeholder="Example: Benefits of learning Python"
+            required>
+        </textarea>
+
+        <br><br>
+        <label>Select Platform:</label>
+
+<select name="platform">
+    <option value="Instagram">Instagram</option>
+    <option value="LinkedIn">LinkedIn</option>
+    <option value="X">X (Twitter)</option>
+</select>
+
+<br><br>
+
+
+
+        <button type="submit"
+        onclick="showloading()">Generate Content</button>
+        <p id="loading" style="display:none;">
+            AI is generating your content....
+        </p>
+
+    </form>
+
+    {% if result %}
+
+        <h2>✨ Generated Content</h2>
+
+        <div class="result" id="result">
+            {{ result }}
+        </div>
+        <button type="button"
+        onclick="copycontent()"> copy content</button>
+
+    {% endif %}
+    <script>
+    function copyContent() {
+        const content = document.getElementById("result").innerText;
+
+        navigator.clipboard.writeText(content);
+
+        alert("Content copied!");
+    }
+    function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+</script>
+
+</body>
+</html>
