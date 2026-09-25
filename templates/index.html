@@ -57,7 +57,17 @@ p {
     <h1>🤖 Social Media AI Generator</h1>
 
     <p>Generate social media content using AI</p>
+<div class="workflow">
+    <h2>🤖 How the AI Agent Works</h2>
 
+    <p>1️⃣ <b>Understand</b> — Understands your topic and selected platform.</p>
+
+    <p>2️⃣ <b>Generate</b> — Creates social media content using the AI agent.</p>
+
+    <p>3️⃣ <b>Review</b> — Reviews and improves the generated content.</p>
+
+    <p>4️⃣ <b>Action</b> — Lets you copy or download the final content.</p>
+</div>
     <form method="POST">
 
         <label>Enter your topic:</label>
@@ -102,6 +112,8 @@ p {
         </div>
         <button type="button"
         onclick="copycontent()"> copy content</button>
+        <button type="button"
+        onclick="downloadContent()">Download Content</button>
 
     {% endif %}
     <script>
@@ -112,7 +124,20 @@ p {
 
         alert("Content copied!");
     }
-    function showLoading() {
+    function downloadContent() {
+    const content = document.getElementById("result").innerText;
+
+    const file = new Blob([content], { type: "text/plain" });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(file);
+    link.download = "social_media_content.txt";
+
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+}
+    function showloading() {
     document.getElementById("loading").style.display = "block";
 }
 </script>

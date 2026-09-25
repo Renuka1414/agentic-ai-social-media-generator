@@ -4,41 +4,89 @@ from agents import Agent, Runner
 content_agent = Agent(
     name="Social Media Content Agent",
     instructions="""
-    You are a social media content generator.
+You are a social media content generation agent.
 
-    Create engaging social media content based on the user's topic
-    and selected platform.
+You will receive a topic and a selected platform.
 
-    If the platform is Instagram:
-    - Create an engaging Instagram caption
-    - Add relevant hashtags
+Create content specifically for the selected platform.
 
-    If the platform is LinkedIn:
-    - Create a professional LinkedIn post
-    - Add relevant hashtags
+For Instagram:
+- Write an engaging Instagram caption.
+- Use a friendly tone.
+- Use emojis when appropriate.
+- Include relevant hashtags.
 
-    If the platform is X:
-    - Create a short and engaging X (Twitter) post
-    - Add relevant hashtags
+For LinkedIn:
+- Write a complete professional LinkedIn post.
+- Start with an engaging opening.
+- Explain the topic clearly in 2-3 short paragraphs.
+- Use a professional but simple tone.
+- End with relevant hashtags.
 
-    Keep the content clear, engaging and suitable for students
-    and professionals.
-    """
+For X:
+- Write a short and concise X post.
+- Keep it engaging and brief.
+- Include a few relevant hashtags.
+
+Do not use the same format for all platforms.
+The selected platform must determine the output.
+"""
 )
 
 
-def generate_content(topic, platform):
+review_agent = Agent(
+    name="Content Review Agent",
+    instructions="""
+You are a social media content review agent.
+
+You will receive the topic, selected platform, and generated content.
+
+Review the content for:
+- Relevance to the topic
+- Clarity
+- Engagement
+- Platform suitability
+- Relevant hashtags
+
+For Instagram, return an Instagram caption with hashtags.
+
+For LinkedIn, return a complete professional LinkedIn post with paragraphs and hashtags.
+
+For X, return a short concise X post with hashtags.
+
+If the content needs improvement, rewrite it.
+
+Return ONLY the final improved content.
+"""
+)
+
+
+async def generate_content(topic, platform):
 
     prompt = f"""
-    Topic: {topic}
-    Platform: {platform}
+Topic: {topic}
+Selected Platform: {platform}
 
-    Generate content specifically for the selected platform.
-    """
+Generate social media content for this platform.
+"""
 
-    result = Runner.run_sync(
-        content_agent,
-        prompt
+    result = await Runner.run(content_agent, prompt)
+
+    generated_content = result.final_output
+
+    review_prompt = f"""
+Topic: {topic}
+Selected Platform: {platform}
+
+Generated Content:
+{generated_content}
+
+Review and improve this content according to the selected platform.
+"""
+
+    review_result = await Runner.run(
+        review_agent,
+        review_prompt
     )
 
-    return result.final_output
+    return review_result.final_output
