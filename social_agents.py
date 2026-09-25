@@ -1,13 +1,16 @@
-from agents import Agent, Runner
+import os
+from google import genai
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
-content_agent = Agent(
-    name="Social Media Content Agent",
-    model="gpt-4o-mini",
-    instructions="""
-You are a social media content generation agent.
+async def generate_content(topic, platform):
 
-You will receive a topic and a selected platform.
+    prompt = f"""
+You are a social media content generation and review agent.
+
+Topic: {topic}
+Selected Platform: {platform}
 
 Create content specifically for the selected platform.
 
@@ -30,65 +33,12 @@ For X:
 - Include a few relevant hashtags.
 
 Do not use the same format for all platforms.
-The selected platform must determine the output.
-"""
-)
-
-
-review_agent = Agent(
-    name="Content Review Agent",
-    model="gpt-4o-mini",
-    instructions="""
-You are a social media content review agent.
-
-You will receive the topic, selected platform, and generated content.
-
-Review the content for:
-- Relevance to the topic
-- Clarity
-- Engagement
-- Platform suitability
-- Relevant hashtags
-
-For Instagram, return an Instagram caption with hashtags.
-
-For LinkedIn, return a complete professional LinkedIn post with paragraphs and hashtags.
-
-For X, return a short concise X post with hashtags.
-
-If the content needs improvement, rewrite it.
-
-Return ONLY the final improved content.
-"""
-)
-
-
-async def generate_content(topic, platform):
-
-    prompt = f"""
-Topic: {topic}
-Selected Platform: {platform}
-
-Generate social media content for this platform.
+Return ONLY the final content.
 """
 
-    result = await Runner.run(content_agent, prompt)
-
-    generated_content = result.final_output
-
-    review_prompt = f"""
-Topic: {topic}
-Selected Platform: {platform}
-
-Generated Content:
-{generated_content}
-
-Review and improve this content according to the selected platform.
-"""
-
-    review_result = await Runner.run(
-        review_agent,
-        review_prompt
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
     )
 
-    return review_result.final_output
+    return response.text
