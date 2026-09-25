@@ -4,7 +4,7 @@ from google import genai
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
-async def generate_content(topic, platform):
+ def generate_content(topic, platform):
 
     prompt = f"""
 You are a social media content generation and review agent.
