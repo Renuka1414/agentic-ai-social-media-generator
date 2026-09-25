@@ -3,6 +3,7 @@ from agents import Agent, Runner
 
 content_agent = Agent(
     name="Social Media Content Agent",
+    model="gpt-4o-mini",
     instructions="""
 You are a social media content generation agent.
 
@@ -36,6 +37,7 @@ The selected platform must determine the output.
 
 review_agent = Agent(
     name="Content Review Agent",
+    model="gpt-4o-mini",
     instructions="""
 You are a social media content review agent.
 
